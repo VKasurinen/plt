@@ -21,5 +21,11 @@ class PigLatinTranslator:
                 else:
                     translated_words.append(word + "ay")
             else:
-                translated_words.append(word[1:] + word[0] + "ay")
+                consonant_prefix = ""
+                for char in word:
+                    if char.lower() not in "aeiou":
+                        consonant_prefix += char
+                    else:
+                        break
+                translated_words.append(word[len(consonant_prefix):] + consonant_prefix + "ay")
         return " ".join(translated_words)
