@@ -20,5 +20,6 @@ class PigLatinTranslator:
                     translated_words.append(word + "yay")
                 else:
                     translated_words.append(word + "ay")
-            # Placeholder for words starting with consonants
+            else:
+                translated_words.append(word[1:] + word[0] + "ay")
         return " ".join(translated_words)
