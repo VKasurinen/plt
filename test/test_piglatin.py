@@ -1,7 +1,5 @@
-# test_piglatin.py
-
 import unittest
-from piglatin import PigLatinTranslator
+from piglatin import PigLatinTranslator, PigLatinError
 
 class TestPigLatinTranslator(unittest.TestCase):
 
@@ -40,6 +38,15 @@ class TestPigLatinTranslator(unittest.TestCase):
     def test_translate_phrase_with_composite_word(self):
         translator = PigLatinTranslator("well-being")
         self.assertEqual(translator.translate(), "ellway-eingbay")
+
+    def test_translate_phrase_with_punctuation(self):
+        translator = PigLatinTranslator("hello world!")
+        self.assertEqual(translator.translate(), "ellohay orldway!")
+
+    def test_translate_phrase_with_invalid_punctuation(self):
+        translator = PigLatinTranslator("hello @world")
+        with self.assertRaises(PigLatinError):
+            translator.translate()
 
 if __name__ == "__main__":
     unittest.main()
