@@ -47,6 +47,18 @@ class TestPigLatinTranslator(unittest.TestCase):
         translator = PigLatinTranslator("hello @world")
         with self.assertRaises(PigLatinError):
             translator.translate()
+    def test_translate_uppercase_word(self):
+        translator = PigLatinTranslator("APPLE")
+        self.assertEqual(translator.translate(), "APPLEYAY")
+
+    def test_translate_title_case_word(self):
+        translator = PigLatinTranslator("Hello")
+        self.assertEqual(translator.translate(), "Ellohay")
+
+    def test_translate_mixed_case_word(self):
+        translator = PigLatinTranslator("biRd")
+        with self.assertRaises(PigLatinError):
+            translator.translate()
 
 if __name__ == "__main__":
     unittest.main()

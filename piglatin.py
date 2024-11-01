@@ -1,9 +1,7 @@
 import re
 
-
 class PigLatinError(Exception):
     pass
-
 
 class PigLatinTranslator:
     allowed_punctuation = ".,;:!?()'"
@@ -28,33 +26,37 @@ class PigLatinTranslator:
         for word in words:
             if word in self.allowed_punctuation:
                 translated_output.append(word)
-            else:
-                sub_words = word.split("-")
-                translated_sub_words = []
-                for sub_word in sub_words:
-                    if sub_word[0].lower() in "aeiou":
-                        if sub_word[-1].lower() == "y":
-                            translated_sub_words.append(sub_word + "nay")
-                        elif sub_word[-1].lower() in "aeiou":
-                            translated_sub_words.append(sub_word + "yay")
-                        else:
-                            translated_sub_words.append(sub_word + "ay")
+                continue
+
+            if not (word.isupper() or word.istitle() or word.islower()):
+                raise PigLatinError("Mixed case is not allowed")
+
+            sub_words = word.split("-")
+            translated_sub_words = []
+
+            for sub_word in sub_words:
+                if sub_word[0].lower() in "aeiou":
+                    if sub_word[-1].lower() == "y":
+                        translated_sub_words.append(sub_word + "nay")
+                    elif sub_word[-1].lower() in "aeiou":
+                        translated_sub_words.append(sub_word + "yay")
                     else:
-                        consonant_prefix = ""
-                        for char in sub_word:
-                            if char.lower() not in "aeiou":
-                                consonant_prefix += char
-                            else:
-                                break
-                        translated_sub_words.append(sub_word[len(consonant_prefix):] + consonant_prefix + "ay")
-                translated_output.append("-".join(translated_sub_words))
+                        translated_sub_words.append(sub_word + "ay")
+                else:
+                    consonant_prefix = ""
+                    for char in sub_word:
+                        if char.lower() not in "aeiou":
+                            consonant_prefix += char
+                        else:
+                            break
+                    translated_sub_words.append(sub_word[len(consonant_prefix):] + consonant_prefix + "ay")
 
-        result = []
-        for i, item in enumerate(translated_output):
-            if i > 0 and item not in self.allowed_punctuation:
-                result.append(item)
+            translated_word = "-".join(translated_sub_words)
+            if word.isupper():
+                translated_output.append(translated_word.upper())
+            elif word.istitle():
+                translated_output.append(translated_word.capitalize())
             else:
-                result.append(item)
+                translated_output.append(translated_word.lower())
 
-        return " ".join(result).replace(" .", ".").replace(" ,", ",").replace(" !", "!").replace(" ?", "?").replace(
-            " ;", ";").replace(" :", ":")
+        return " ".join(translated_output).replace(" .", ".").replace(" ,", ",").replace(" !", "!").replace(" ?", "?").replace(" ;", ";").replace(" :", ":")
