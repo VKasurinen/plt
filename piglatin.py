@@ -13,19 +13,23 @@ class PigLatinTranslator:
         words = self.phrase.split()
         translated_words = []
         for word in words:
-            if word[0].lower() in "aeiou":
-                if word[-1].lower() == "y":
-                    translated_words.append(word + "nay")
-                elif word[-1].lower() in "aeiou":
-                    translated_words.append(word + "yay")
-                else:
-                    translated_words.append(word + "ay")
-            else:
-                consonant_prefix = ""
-                for char in word:
-                    if char.lower() not in "aeiou":
-                        consonant_prefix += char
+            sub_words = word.split("-")
+            translated_sub_words = []
+            for sub_word in sub_words:
+                if sub_word[0].lower() in "aeiou":
+                    if sub_word[-1].lower() == "y":
+                        translated_sub_words.append(sub_word + "nay")
+                    elif sub_word[-1].lower() in "aeiou":
+                        translated_sub_words.append(sub_word + "yay")
                     else:
-                        break
-                translated_words.append(word[len(consonant_prefix):] + consonant_prefix + "ay")
+                        translated_sub_words.append(sub_word + "ay")
+                else:
+                    consonant_prefix = ""
+                    for char in sub_word:
+                        if char.lower() not in "aeiou":
+                            consonant_prefix += char
+                        else:
+                            break
+                    translated_sub_words.append(sub_word[len(consonant_prefix):] + consonant_prefix + "ay")
+            translated_words.append("-".join(translated_sub_words))
         return " ".join(translated_words)
